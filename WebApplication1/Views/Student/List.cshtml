@@ -1,0 +1,143 @@
+﻿@using Information;
+@model IPagedList<StudentInfo>
+
+<p>
+    @*@Ajax.ActionLink("Create New", "Create",
+                new AjaxOptions()
+                {
+                    UpdateTargetId = "editDiv",
+                    InsertionMode = InsertionMode.Replace,
+                    OnSuccess = "rwData.openEdit();",
+                    HttpMethod = "Get"
+                })*@
+    @Ajax.ActionLink("新增", "Create", null,
+                                new AjaxOptions()
+                                {
+                                    UpdateTargetId = "editDiv",
+                                    InsertionMode = InsertionMode.Replace,
+                                    OnSuccess = "rwData.openEdit();",
+                                    HttpMethod = "Get"
+                                },
+                                new {@class="btn btn-success" })
+
+</p>
+<table class="table">
+<tr>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().Sn)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Sn)
+            </a>
+        </th>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().Name)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+            </a>
+        </th>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().ClassId)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ClassId)
+            </a>
+        </th>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().Hight)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Hight)
+            </a>
+        </th>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().Weight)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Weight)
+            </a>
+        </th>
+        <th>
+            <a href="javascript:rwData.postSort('@Html.IdFor(model => model.FirstOrDefault().Birthday)');">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Birthday)
+            </a>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Photo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Memo)
+        </th>
+        <th>Edit</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthday)
+            </td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(item.Photo)) { 
+                <img src="~/Files/Stud/@item.Photo" height="50" />
+                }                
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Memo)
+            </td>
+            <td>
+                @*@Ajax.ActionLink("編輯", "Edit",
+                new { id = item.id },
+                new AjaxOptions()
+                {
+                    UpdateTargetId = "editDiv",
+                    InsertionMode = InsertionMode.Replace,
+                    OnSuccess = "rwData.openEdit();",
+                    HttpMethod = "Get"
+                })*@
+                @Ajax.ActionLink("編輯", "Edit", null,
+                        new { id = item.Sn },
+                        new AjaxOptions()
+                        {
+                            UpdateTargetId = "editDiv",
+                            InsertionMode = InsertionMode.Replace,
+                            OnSuccess = "rwData.openEdit();",
+                            HttpMethod = "Get"
+                        },
+                        new {@class="btn btn-primary"})
+                |
+                @*@Ajax.ActionLink("刪除", "Delete",
+                new { id = item.id },
+                new AjaxOptions()
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    OnSuccess = "rwData.queryData();",
+                    OnFailure = "alert('error');",
+                    Confirm = "確定刪除嗎?",
+                    HttpMethod = "Delete"
+                })*@
+
+                @Ajax.ActionLink("刪除", "Delete", null,
+                            new { id = item.Sn },
+                            new AjaxOptions()
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                OnSuccess = "rwData.queryData();",
+                                OnFailure = "alert('error');",
+                                Confirm = "確定刪除嗎?",
+                                HttpMethod = "Delete"
+                            },
+                            new {@class = "btn btn-danger"})
+            </td>
+        </tr>                
+    }
+</table>
+<div class="pager">
+    @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
+</div>
+<script type="text/javascript" src="@Scripts.Url("~/Scripts/btnSet.js")"></script>

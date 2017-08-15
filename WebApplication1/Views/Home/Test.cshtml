@@ -1,0 +1,312 @@
+﻿@model MyTestModel
+
+@{
+    ViewBag.Title = "FormInput-Model";
+}
+
+<h2>FormInput-Model</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.File)
+            @Html.TextBoxFor(x => x.File, new { type = "file" })
+            @Html.ValidationMessageFor(x => x.File)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Files)
+            @Html.TextBoxFor(x => x.Files, new { type = "file", multiple = "multiple" })
+            @Html.ValidationMessageFor(x => x.Files)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Id1)
+            @Html.DropDownListFor(x => x.Id1, Model.Select1, "請選擇")
+            @Html.ValidationMessageFor(x => x.Id1)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Id2) 
+            @foreach (var item in Model.Select1)
+            {
+                @Html.RadioButtonFor(x => x.Id2, item.Value)@Html.Label(item.Text)
+            }
+            @Html.ValidationMessageFor(x => x.Id2)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.List1)
+            @Html.ListBoxFor(x => x.List1, Model.Select1)
+            @Html.ValidationMessageFor(x => x.List1)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.List2)
+            @foreach (var s in Model.Select1)
+            {
+                <input type="checkbox"
+                   name="@Html.IdFor(x => x.List2)"
+                   value="@s.Value"
+                   @{if (Model.List2 != null && Model.List2.Contains(s.Value))
+                     { <text> checked='checked' </text>  }  }>
+                @s.Text
+            }
+            @Html.ValidationMessageFor(x => x.List2)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.ClassId)
+            @Html.DisplayNameFor(x => x.StudentId)
+            @Html.DropDownListFor(x => x.ClassId, Model.ClassSelect, "請選擇", new { @onchange = "CityChange(this.value)" })
+            @Html.DropDownListFor(x => x.StudentId, Model.StudentSelect, "請選擇")
+            @Html.ValidationMessageFor(x => x.StudentId)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text1)
+            @Html.TextBoxFor(x => x.Text1)
+            @Html.ValidationMessageFor(x => x.Text1)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text2)
+            @Html.TextBoxFor(x => x.Text2)
+            @Html.ValidationMessageFor(x => x.Text2)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text3)
+            @Html.TextBoxFor(x => x.Text3)
+            @Html.ValidationMessageFor(x => x.Text3)
+            @Html.TextBoxFor(x => x.Text32)
+            @Html.ValidationMessageFor(x => x.Text32)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text4)
+            @Html.TextBoxFor(x => x.Text4, "{0:yyyy-MM-dd}", new { type = "date" })
+            @Html.ValidationMessageFor(x => x.Text4)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text5)
+            @Html.TextBoxFor(x => x.Text5)
+            @Html.ValidationMessageFor(x => x.Text5)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text6)
+            @Html.PasswordFor(x => x.Text6)
+            @Html.ValidationMessageFor(x => x.Text6)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Check1)
+            @Html.CheckBoxFor(x => x.Check1)
+            @Html.ValidationMessageFor(x => x.Check1)
+        </div>
+        <div class="form-group">
+            @Html.DisplayNameFor(x => x.Text6)
+            @Html.HiddenFor(x => x.Text6)
+            @Html.ValidationMessageFor(x => x.Text6)
+        </div>
+        <div class="form-group">
+            <button type="submit">submit</button>
+        </div>
+    </div>  
+}
+@section Styles{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+        .custom-combobox {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-combobox-toggle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin-left: -1px;
+            padding: 0;
+        }
+
+        .custom-combobox-input {
+            margin: 0;
+            padding: 5px 10px;
+        }
+    </style>
+}
+
+@section scripts {
+    <script>
+        //縣市鄉鎮
+        function CityChange(city) {
+
+            //var jsonData = JSON.stringify({
+            //    'city': city
+            //});
+
+            $.ajax({
+                url: "@Url.Action("ClassStud", "Home")/" + city,
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                //data: jsonData,
+                dataType: 'json',
+                success: function (result) {
+                    var studSelect = $("#@Html.IdFor(x => x.StudentId)");
+                    if (result) {
+                        var items = "<option value=''>請選擇</option>";
+                        for (var i = 0; i < result.length; i++) {
+                            items += "<option value='" + result[i].Value + "'>" + result[i].Text + "</option>";
+                        }
+                        studSelect.html(items);
+                    }
+                    else {
+                        alert('error');
+                    }
+                }
+            });
+            }
+    </script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script>
+        //可搜尋的TextBox
+        (function ($) {
+            $.widget("custom.combobox", {
+                _create: function () {
+                    this.wrapper = $("<span>")
+                      .addClass("custom-combobox")
+                      .insertAfter(this.element);
+
+                    this.element.hide();
+                    this._createAutocomplete();
+                    this._createShowAllButton();
+                },
+
+                _createAutocomplete: function () {
+                    var selected = this.element.children(":selected"),
+                      value = selected.val() ? selected.text() : "";
+
+                    this.input = $("<input>")
+                      .appendTo(this.wrapper)
+                      .val(value)
+                      .attr("title", "")
+                      .addClass("custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left")
+                      .autocomplete({
+                          delay: 0,
+                          minLength: 0,
+                          source: $.proxy(this, "_source")
+                      })
+                      .tooltip({
+                          tooltipClass: "ui-state-highlight"
+                      });
+
+                    this._on(this.input, {
+                        autocompleteselect: function (event, ui) {
+                            ui.item.option.selected = true;
+                            this._trigger("select", event, {
+                                item: ui.item.option
+                            });
+                        },
+
+                        autocompletechange: "_removeIfInvalid"
+                    });
+                },
+
+                _createShowAllButton: function () {
+                    var input = this.input,
+                      wasOpen = false;
+
+                    $("<a>")
+                      .attr("tabIndex", -1)
+                      .attr("title", "Show All Items")
+                      .tooltip()
+                      .appendTo(this.wrapper)
+                      .button({
+                          icons: {
+                              primary: "ui-icon-triangle-1-s"
+                          },
+                          text: false
+                      })
+                      .removeClass("ui-corner-all")
+                      .addClass("custom-combobox-toggle ui-corner-right")
+                      .mousedown(function () {
+                          wasOpen = input.autocomplete("widget").is(":visible");
+                      })
+                      .click(function () {
+                          input.focus();
+
+                          // Close if already visible
+                          if (wasOpen) {
+                              return;
+                          }
+
+                          // Pass empty string as value to search for, displaying all results
+                          input.autocomplete("search", "");
+                      });
+                },
+
+                _source: function (request, response) {
+                    var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                    response(this.element.children("option").map(function () {
+                        var text = $(this).text();
+                        if (this.value && (!request.term || matcher.test(text)))
+                            return {
+                                label: text,
+                                value: text,
+                                option: this
+                            };
+                    }));
+                },
+
+                _removeIfInvalid: function (event, ui) {
+
+                    // Selected an item, nothing to do
+                    if (ui.item) {
+                        return;
+                    }
+
+                    // Search for a match (case-insensitive)
+                    var value = this.input.val(),
+                      valueLowerCase = value.toLowerCase(),
+                      valid = false;
+                    this.element.children("option").each(function () {
+                        if ($(this).text().toLowerCase() === valueLowerCase) {
+                            this.selected = valid = true;
+                            return false;
+                        }
+                    });
+
+                    // Found a match, nothing to do
+                    if (valid) {
+                        return;
+                    }
+
+                    // Remove invalid value
+                    this.input
+                      .val("")
+                      .attr("title", value + " didn't match any item")
+                      .tooltip("open");
+                    this.element.val("");
+                    this._delay(function () {
+                        this.input.tooltip("close").attr("title", "");
+                    }, 2500);
+                    this.input.autocomplete("instance").term = "";
+                },
+
+                _destroy: function () {
+                    this.wrapper.remove();
+                    this.element.show();
+                }
+            });
+        })(jQuery);
+
+        $(function () {
+            var cb = $("#@Html.IdFor(x => x.Id1)");
+            cb.combobox();
+            $("#toggle").click(function () {
+                cb.toggle();
+            });
+        });
+
+        //IE 無法秀date
+        $(function () {
+            if (window.attachEvent) {
+                $("input[type=date]").datepicker({ dateFormat: 'yy-mm-dd' });
+            }
+        });
+    </script>
+}
+

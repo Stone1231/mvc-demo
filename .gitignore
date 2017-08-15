@@ -1,0 +1,17 @@
+*.sln
+*.suo
+*.exe
+.vs/
+packages/
+Business/bin
+Business/obj
+Commons/bin
+Commons/obj
+DataAccess/bin
+DataAccess/obj
+Information/bin
+Information/obj
+WebApi1/bin
+WebApi1/obj
+WebApplication1/bin
+WebApplication1/obj
