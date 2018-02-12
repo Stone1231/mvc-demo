@@ -35,21 +35,7 @@ namespace WebApplication1
 
         public IEnumerable<System.Web.Mvc.SelectListItem> Select2 { get; set; }
         [DisplayName("複選-2")]
-        public string[] List2
-        {
-            get
-            {
-                if (Select2 == null) {
-                    return null;
-                }
-                var data = Select2.Where(w => w.Selected);
-                if (data.Count() > 0)
-                {
-                    return data.Select(s => s.Value).ToArray();
-                }
-                return null;
-            }
-        }
+        public string[] List2 { get; set; }
 
         [DisplayName("數字(2~5位)")]
         //[Required(ErrorMessage = "要填啦!")]
@@ -62,11 +48,12 @@ namespace WebApplication1
         public string Text2 { get; set; }
 
         [DisplayName("電子郵件")]
+        [Required(ErrorMessage = "一定要填啦!")]
         [EmailAddress(ErrorMessage = "要填電子郵件啦!")]
         public string Text3 { get; set; }
 
-        [DisplayName("電子郵件2")]
-        [Compare("Text32", ErrorMessage = "電子郵件2與電子郵件不同")]
+        [DisplayName("電子郵件確認")]
+        [Compare("Text3", ErrorMessage = "電子郵件2與電子郵件不同")]
         public string Text32 { get; set; }
 
         [DisplayName("日期")]
