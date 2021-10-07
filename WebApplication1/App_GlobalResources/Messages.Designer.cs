@@ -16,10 +16,10 @@ namespace Resources {
     ///   用於查詢當地語系化字串等的強型別資源類別。
     /// </summary>
     // 這個類別是自動產生的，是利用 StronglyTypedResourceBuilder
-    // 類別透過 ResGen 或 Visual Studio 之類工具。
+    // 類別透過 ResGen 或 Visual Studio 這類工具產生。
     // 若要加入或移除成員，請編輯您的 .ResX 檔，然後重新執行 ResGen
     // (利用 /str 選項)，或重建 Visual Studio 專案。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Web.Application.StronglyTypedResourceProxyBuilder", "12.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Web.Application.StronglyTypedResourceProxyBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Messages {
